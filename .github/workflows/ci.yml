@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Do something trivial
+        run: |
+          echo "Hello from the automation-lab demo CI!"
+          {
+            echo "repo: ${GITHUB_REPOSITORY}"
+            echo "run_id: ${GITHUB_RUN_ID}"
+            echo "commit: ${GITHUB_SHA}"
+            echo "actor: ${GITHUB_ACTOR}"
+            echo "timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > build-info.txt
+          echo "--- build-info.txt ---"
+          cat build-info.txt
+
+      - name: Upload build-info artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-info
+          path: build-info.txt
+          retention-days: 1
